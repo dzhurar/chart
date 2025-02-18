@@ -15749,60 +15749,7 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; } // import { nanoid } from 'nanoid';
-// const id = nanoid(5);
-// console.log(id);
-// import { customAlphabet } from "nanoid";
-// const alphabet = 'abc123';
-// const customNanoid = customAlphabet(alphabet, 10);
-// const id = customNanoid();
-// console.log(id);
-// import { success, notice, info, error, defaultModules } from "@pnotify/core/dist/PNotify.js";
-// import * as PNotifyMobile from '@pnotify/mobile/dist/PNotifyMobile.js';
-// import "@pnotify/core/dist/BrightTheme.css";
-// defaultModules.set(PNotifyMobile, {});
-// const mySuccess = success({
-//     text: 'Операція успішна',
-// })
-// const myError = notice({
-//     text: 'Операція успішна',
-// })
-// const myInfo = info({
-//     text: 'Операція успішна',
-// })
-// const myNotice = error({
-//     text: 'Операція успішна',
-// })
-// console.log(mySuccess);
-// console.log(myError);
-// console.log(myInfo);
-// console.log(myNotice);
-// import {Chart, registerables} from 'chart.js';
-// Chart.register(...registerables);
-// const date = {
-//     labels: ['january', 'february', 'march', 'april', 'may', 'june', 'july'],
-//     datasets: [{
-//         label: 'Temp',
-//         data: [15, 13, 24, 25, 26, 42, 54],
-//         fill: false,
-//         borderColor: 'rgb(143, 54, 78)',
-//         tension: 0.1
-//     }],
-// }
-// const config = {
-//     type: 'line',
-//     data: date,
-//     options: {}
-// }
-// document.addEventListener('DOMContentLoaded', () => {
-//     const a = document.getElementById('myChart').getContext('2d');
-//     new Chart(a, config);
-// })
-// import * as basicLightbox from 'basiclightbox';
-// import 'basicLightbox/dist/basicLightbox.min.css';
-// const img = '<img src="https://media.4-paws.org/f/8/0/5/f8055215b5cdc5dee5494c255ca891d7b7d33cd1/Molly_006-2829x1886-2726x1886.jpg" alt="car">';
-// const instance = basicLightbox.create(img);
-// instance.show();
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 _chart.Chart.register.apply(_chart.Chart, _toConsumableArray(_chart.registerables));
 var chartData = {
   labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
@@ -15848,7 +15795,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55350" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57558" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
