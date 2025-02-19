@@ -15775,26 +15775,73 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; } // import { Chart, registerables } from 'chart.js';
+// Chart.register(...registerables);
+// const chartData = {
+//     labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+//     datasets: [
+//       {
+//         label: "Продажі за останній місяць",
+//         data: [150, 220, 180, 200, 250, 300, 280, 350, 400, 380, 420, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350],
+//         backgroundColor: "#2196f3",
+//         borderColor: "#2196f3",
+//         borderWidth: 2,
+//       },
+//     ],
+//   };
+//   const settings = {
+//     type: 'line',
+//     data: chartData,
+//     options: {}
+//   }
+// document.getElementById('reveal').addEventListener('click', () =>{
+//     const salesChart = document.getElementById('salesСhart');
+//     new Chart(salesChart, settings);
+// });
+// import { Chart, registerables } from "chart.js";
+// Chart.register(...registerables);
+// document.getElementById("reveal").addEventListener("click", () => {
+//   const ctx = document.getElementById("salesChart").getContext("2d");
+//   newChart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()),
+//       datasets: [
+//         {
+//           label: "Продажі за останній місяць",
+//           data: [
+//             150, 220, 180, 200, 250, 300, 280, 350, 400, 380, 420, 450, 500,
+//             550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150,
+//             1200, 1250, 1300, 1350,
+//           ],
+//           backgroundColor: "#2196f3",
+//           borderColor: "#2196f3",
+//           borderWidth: 2,
+//         },
+//       ],
+//     },
+//     options: {},
+//   });
+// });
 _chart.Chart.register.apply(_chart.Chart, _toConsumableArray(_chart.registerables));
-var chartData = {
+var date = {
   labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
   datasets: [{
-    label: "Продажі за останній місяць",
+    label: 'Продажі за останній місяць',
     data: [150, 220, 180, 200, 250, 300, 280, 350, 400, 380, 420, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350],
-    backgroundColor: "#2196f3",
-    borderColor: "#2196f3",
-    borderWidth: 2
+    fill: false,
+    borderColor: 'skyblue',
+    tension: 0.1
   }]
 };
-var settings = {
+var config = {
   type: 'line',
-  data: chartData,
+  data: date,
   options: {}
 };
-document.getElementById('reveal').addEventListener('click', function () {
-  var salesChart = document.getElementById('salesСhart');
-  new _chart.Chart(salesChart, settings);
+document.addEventListener('DOMContentLoaded', function () {
+  var a = document.getElementById('salesСhart').getContext('2d');
+  new _chart.Chart(a, config);
 });
 },{"chart.js":"node_modules/chart.js/dist/chart.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -15821,7 +15868,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53899" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54995" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
