@@ -15740,17 +15740,39 @@ var scales = exports.scales = /*#__PURE__*/Object.freeze({
   TimeSeriesScale: TimeSeriesScale
 });
 const registerables = exports.registerables = [controllers, elements, plugins, scales];
-},{"./chunks/helpers.segment.js":"node_modules/chart.js/dist/chunks/helpers.segment.js","@kurkle/color":"node_modules/@kurkle/color/dist/color.esm.js"}],"src/index.js":[function(require,module,exports) {
+},{"./chunks/helpers.segment.js":"node_modules/chart.js/dist/chunks/helpers.segment.js","@kurkle/color":"node_modules/@kurkle/color/dist/color.esm.js"}],"node_modules/chart.js/auto/auto.js":[function(require,module,exports) {
 "use strict";
 
-var _chart = require("chart.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {};
+exports.default = void 0;
+var _chart = require("../dist/chart.js");
+Object.keys(_chart).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _chart[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _chart[key];
+    }
+  });
+});
+_chart.Chart.register(..._chart.registerables);
+var _default = exports.default = _chart.Chart;
+},{"../dist/chart.js":"node_modules/chart.js/dist/chart.js"}],"src/index.js":[function(require,module,exports) {
+"use strict";
+
+var _auto = require("chart.js/auto");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-_chart.Chart.register.apply(_chart.Chart, _toConsumableArray(_chart.registerables));
+_auto.Chart.register.apply(_auto.Chart, _toConsumableArray(_auto.registerables));
 var chartData = {
   labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
   datasets: [{
@@ -15768,9 +15790,9 @@ var settings = {
 };
 document.getElementById('reveal').addEventListener('click', function () {
   var salesChart = document.getElementById('salesСhart');
-  new _chart.Chart(salesChart, settings);
+  new _auto.Chart(salesChart, settings);
 });
-},{"chart.js":"node_modules/chart.js/dist/chart.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"chart.js/auto":"node_modules/chart.js/auto/auto.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -15795,7 +15817,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57558" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51879" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
