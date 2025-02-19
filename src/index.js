@@ -1,5 +1,5 @@
 
-import { Chart, registerables } from 'chart.js/auto';
+const { Chart, registerables } = require('chart.js');
 Chart.register(...registerables);
 
 const chartData = {
