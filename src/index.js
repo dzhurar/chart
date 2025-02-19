@@ -66,7 +66,7 @@ Chart.register(...registerables);
      options: {
      }
  }
- document.addEventListener('DOMContentLoaded', () => {
+ document.getElementById('reveal').addEventListener('click', () => {
      const a = document.getElementById('salesСhart').getContext('2d');
      new Chart(a, config);
  });

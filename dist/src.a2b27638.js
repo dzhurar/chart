@@ -15839,7 +15839,7 @@ var config = {
   data: date,
   options: {}
 };
-document.addEventListener('DOMContentLoaded', function () {
+document.getElementById('reveal').addEventListener('click', function () {
   var a = document.getElementById('salesСhart').getContext('2d');
   new _chart.Chart(a, config);
 });
