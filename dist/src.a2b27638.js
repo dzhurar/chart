@@ -872,9 +872,9 @@ exports.y = _parseObjectDataRadialScale;
 exports.z = getRelativePosition;
 var _color = require("@kurkle/color");
 /*!
- * Chart.js v4.4.7
+ * Chart.js v4.4.8
  * https://www.chartjs.org
- * (c) 2024 Chart.js Contributors
+ * (c) 2025 Chart.js Contributors
  * Released under the MIT License
  */
 
@@ -1216,8 +1216,14 @@ function _factorize(value) {
   result.sort((a, b) => a - b).pop();
   return result;
 }
+/**
+ * Verifies that attempting to coerce n to string or number won't throw a TypeError.
+ */
+function isNonPrimitive(n) {
+  return typeof n === 'symbol' || typeof n === 'object' && n !== null && !(Symbol.toPrimitive in n || 'toString' in n || 'valueOf' in n);
+}
 function isNumber(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+  return !isNonPrimitive(n) && !isNaN(parseFloat(n)) && isFinite(n);
 }
 function almostWhole(x, epsilon) {
   const rounded = Math.round(x);
@@ -1529,8 +1535,10 @@ function _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled) {
   if (meta._sorted) {
     const {
       iScale,
+      vScale,
       _parsed
     } = meta;
+    const spanGaps = meta.dataset ? meta.dataset.options ? meta.dataset.options.spanGaps : null : null;
     const axis = iScale.axis;
     const {
       min,
@@ -1539,18 +1547,28 @@ function _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled) {
       maxDefined
     } = iScale.getUserBounds();
     if (minDefined) {
-      start = _limitValue(Math.min(
+      start = Math.min(
       // @ts-expect-error Need to type _parsed
       _lookupByKey(_parsed, axis, min).lo,
       // @ts-expect-error Need to fix types on _lookupByKey
-      animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo), 0, pointCount - 1);
+      animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo);
+      if (spanGaps) {
+        const distanceToDefinedLo = _parsed.slice(0, start + 1).reverse().findIndex(point => !isNullOrUndef(point[vScale.axis]));
+        start -= Math.max(0, distanceToDefinedLo);
+      }
+      start = _limitValue(start, 0, pointCount - 1);
     }
     if (maxDefined) {
-      count = _limitValue(Math.max(
+      let end = Math.max(
       // @ts-expect-error Need to type _parsed
       _lookupByKey(_parsed, iScale.axis, max, true).hi + 1,
       // @ts-expect-error Need to fix types on _lookupByKey
-      animationsDisabled ? 0 : _lookupByKey(points, axis, iScale.getPixelForValue(max), true).hi + 1), start, pointCount) - start;
+      animationsDisabled ? 0 : _lookupByKey(points, axis, iScale.getPixelForValue(max), true).hi + 1);
+      if (spanGaps) {
+        const distanceToDefinedHi = _parsed.slice(end - 1).findIndex(point => !isNullOrUndef(point[vScale.axis]));
+        end += Math.max(0, distanceToDefinedHi);
+      }
+      count = _limitValue(end, start, pointCount) - start;
     } else {
       count = pointCount - start;
     }
@@ -3067,14 +3085,8 @@ function _updateBezierControlPoints(points, options, area, loop, indexAxis) {
 }
 
 /**
- * Note: typedefs are auto-exported, so use a made-up `dom` namespace where
- * necessary to avoid duplicates with `export * from './helpers`; see
- * https://github.com/microsoft/TypeScript/issues/46011
- * @typedef { import('../core/core.controller.js').default } dom.Chart
- * @typedef { import('../../types').ChartEvent } ChartEvent
- */ /**
-    * @private
-    */
+ * @private
+ */
 function _isDomSupported() {
   return typeof window !== 'undefined' && typeof document !== 'undefined';
 }
@@ -3761,9 +3773,9 @@ exports.scales = exports.registry = exports.registerables = exports.plugins = ex
 var _helpersSegment = require("./chunks/helpers.segment.js");
 require("@kurkle/color");
 /*!
- * Chart.js v4.4.7
+ * Chart.js v4.4.8
  * https://www.chartjs.org
- * (c) 2024 Chart.js Contributors
+ * (c) 2025 Chart.js Contributors
  * Released under the MIT License
  */
 
@@ -6460,10 +6472,24 @@ function binarySearch(metaset, axis, value, intersect) {
     _sorted
   } = metaset;
   const iScale = controller._cachedMeta.iScale;
+  const spanGaps = metaset.dataset ? metaset.dataset.options ? metaset.dataset.options.spanGaps : null : null;
   if (iScale && axis === iScale.axis && axis !== 'r' && _sorted && data.length) {
     const lookupMethod = iScale._reversePixels ? _helpersSegment.A : _helpersSegment.B;
     if (!intersect) {
-      return lookupMethod(data, axis, value);
+      const result = lookupMethod(data, axis, value);
+      if (spanGaps) {
+        const {
+          vScale
+        } = controller._cachedMeta;
+        const {
+          _parsed
+        } = metaset;
+        const distanceToDefinedLo = _parsed.slice(0, result.lo + 1).reverse().findIndex(point => !(0, _helpersSegment.k)(point[vScale.axis]));
+        result.lo -= Math.max(0, distanceToDefinedLo);
+        const distanceToDefinedHi = _parsed.slice(result.hi).findIndex(point => !(0, _helpersSegment.k)(point[vScale.axis]));
+        result.hi += Math.max(0, distanceToDefinedHi);
+      }
+      return result;
     } else if (controller._sharedOptions) {
       const el = data[0];
       const range = typeof el.getRange === 'function' && el.getRange(axis);
@@ -9374,7 +9400,7 @@ function needContext(proxy, names) {
   }
   return false;
 }
-var version = "4.4.7";
+var version = "4.4.8";
 const KNOWN_POSITIONS = ['top', 'bottom', 'left', 'right', 'chartArea'];
 function positionIsHorizontal(position, axis) {
   return position === 'top' || position === 'bottom' || KNOWN_POSITIONS.indexOf(position) === -1 && axis === 'x';
@@ -15740,39 +15766,17 @@ var scales = exports.scales = /*#__PURE__*/Object.freeze({
   TimeSeriesScale: TimeSeriesScale
 });
 const registerables = exports.registerables = [controllers, elements, plugins, scales];
-},{"./chunks/helpers.segment.js":"node_modules/chart.js/dist/chunks/helpers.segment.js","@kurkle/color":"node_modules/@kurkle/color/dist/color.esm.js"}],"node_modules/chart.js/auto/auto.js":[function(require,module,exports) {
+},{"./chunks/helpers.segment.js":"node_modules/chart.js/dist/chunks/helpers.segment.js","@kurkle/color":"node_modules/@kurkle/color/dist/color.esm.js"}],"src/index.js":[function(require,module,exports) {
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var _exportNames = {};
-exports.default = void 0;
-var _chart = require("../dist/chart.js");
-Object.keys(_chart).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  if (key in exports && exports[key] === _chart[key]) return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function () {
-      return _chart[key];
-    }
-  });
-});
-_chart.Chart.register(..._chart.registerables);
-var _default = exports.default = _chart.Chart;
-},{"../dist/chart.js":"node_modules/chart.js/dist/chart.js"}],"src/index.js":[function(require,module,exports) {
-"use strict";
-
-var _auto = require("chart.js/auto");
+var _chart = require("chart.js");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-_auto.Chart.register.apply(_auto.Chart, _toConsumableArray(_auto.registerables));
+_chart.Chart.register.apply(_chart.Chart, _toConsumableArray(_chart.registerables));
 var chartData = {
   labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
   datasets: [{
@@ -15790,9 +15794,9 @@ var settings = {
 };
 document.getElementById('reveal').addEventListener('click', function () {
   var salesChart = document.getElementById('salesСhart');
-  new _auto.Chart(salesChart, settings);
+  new _chart.Chart(salesChart, settings);
 });
-},{"chart.js/auto":"node_modules/chart.js/auto/auto.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"chart.js":"node_modules/chart.js/dist/chart.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -15817,7 +15821,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51879" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53899" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
